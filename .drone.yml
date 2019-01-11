@@ -1,0 +1,19 @@
+pipeline:
+  firstphase:
+    image: alpine:3.8
+    commands:
+    - echo 'Hello world'
+    - pwd
+    - date > currentTime
+    - find .
+    - printenv
+  secondphase:
+    image: alpine:3.8
+    commands:
+    - echo 'Hello world'
+    - pwd
+    - cat currentTime
+    - find .
+    - printenv
+
+branches: master
