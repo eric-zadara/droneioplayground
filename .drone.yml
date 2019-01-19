@@ -10,8 +10,8 @@ pipeline:
   docker_image:
     image: docker:18.06
     environment:
-#    - DOCKER_HOST="unix:///var/run/host.sock"
-    - IMAGE_NAME="tinkering"
+#    - DOCKER_HOST=unix:///var/run/host.sock
+    - IMAGE_NAME=tinkering
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     commands:
