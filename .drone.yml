@@ -8,14 +8,16 @@ pipeline:
     - find .
     - printenv
   docker_image:
-    image: plugins/docker
-    repo: testing/container
-    tags:
-    - latest
-    - "${CI_COMMIT_SHA}"
-    dockerfile: Dockerfile
-    save:
-      destination: "testing-${CI_COMMIT_SHA}.tar"
+    image: docker:18.06
+    environment:
+    - DOCKER_HOST: unix:///var/run/host.sock
+    - IMAGE_NAME: tinkering
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+    - docker build -t ${IMAGE_NAME}:${DRONE_COMMIT_BRANCH} -t ${IMAGE_NAME}:${CI_COMMIT_SHA} .
+    - docker save --output ${IMAGE_NAME}_${DRONE_COMMIT_BRANCH}_${DRONE_BUILD_CREATED}_${CI_COMMIT_SHA}.tar ${IMAGE_NAME}
+    - docker rmi ${IMAGE_NAME}:${DRONE_COMMIT_BRANCH} ${IMAGE_NAME}:${CI_COMMIT_SHA}
   secondphase:
     image: alpine:3.8
     commands:
@@ -23,4 +25,3 @@ pipeline:
     - pwd
     - cat currentTime
     - find .
-    - printenv
