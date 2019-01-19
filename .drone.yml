@@ -7,6 +7,15 @@ pipeline:
     - date > currentTime
     - find .
     - printenv
+  docker_image:
+    image: plugins/docker
+    repo: testing/container
+    tags:
+    - latest
+    - "${CI_COMMIT_SHA}"
+    dockerfile: Dockerfile
+    save:
+      destination: "testing-${CI_COMMIT_SHA}.tar"
   secondphase:
     image: alpine:3.8
     commands:
@@ -15,5 +24,3 @@ pipeline:
     - cat currentTime
     - find .
     - printenv
-
-branches: master
