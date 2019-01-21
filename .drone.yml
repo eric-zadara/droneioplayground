@@ -31,11 +31,11 @@ pipeline:
     - aws_access_key_id
     - aws_secret_access_key
     environment:
-      plugin_bucket: zadarastorage-eric
-      plugin_source: "./**/*"
-      plugin_target: /container/
-#      plugin_strip_prefix: container/
-      plugin_dry_run: "true"
+    - plugin_bucket: zadarastorage-eric
+    - plugin_source: container/**/*
+    - plugin_target: /container/
+    - plugin_strip_prefix: container/
+    - plugin_dry_run: "true"
 
   secondphase:
     image: alpine:3.8
