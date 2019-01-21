@@ -32,7 +32,7 @@ pipeline:
     - aws_secret_access_key
     environment:
       plugin_bucket: zadarastorage-eric
-      plugin_source: container/**/*.tar
+      plugin_source: /container/**/*.tar
       plugin_target: /container/
       plugin_strip_prefix: container/
       plugin_dry_run: "true"
