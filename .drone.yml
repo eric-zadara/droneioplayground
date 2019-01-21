@@ -35,7 +35,7 @@ pipeline:
       plugin_source: container/*
       plugin_target: /container/
       plugin_strip_prefix: container/
-      plugin_dry_run: true
+      plugin_dry_run: "true"
 
   secondphase:
     image: alpine:3.8
