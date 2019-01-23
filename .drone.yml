@@ -44,3 +44,4 @@ pipeline:
     - pwd
     - cat currentTime
     - find .
+    - echo ">.<"
