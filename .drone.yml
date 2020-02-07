@@ -11,15 +11,6 @@ steps:
   - date > currentTime
   - find .
   - printenv
-- name: docker_image
-  image: docker:18.06
-  volumes:
-  - name: dockersock
-    path: /var/run/docker.sock
-  commands:
-  - docker build -t "$${IMAGE_NAME}:$${DRONE_COMMIT_BRANCH}" -t "$${IMAGE_NAME}:$${CI_COMMIT_SHA}" .
-  - docker save --output "$${IMAGE_NAME}_$${DRONE_COMMIT_BRANCH}_$${DRONE_BUILD_CREATED}_$${CI_COMMIT_SHA}.tar" "$${IMAGE_NAME}"
-  - docker rmi "$${IMAGE_NAME}:$${DRONE_COMMIT_BRANCH}" "$${IMAGE_NAME}:$${CI_COMMIT_SHA}"
 
 volumes:
 - name: dockersock
