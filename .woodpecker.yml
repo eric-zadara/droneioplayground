@@ -1,0 +1,47 @@
+pipeline:
+  firstphase:
+    image: alpine:3.8
+    commands:
+    - echo 'Hello world'
+    - pwd
+    - date > currentTime
+    - find .
+    - printenv
+  docker_image:
+    image: docker:18.06
+    environment:
+#    - DOCKER_HOST=unix:///var/run/host.sock
+    - IMAGE_NAME=tinkering
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+    - docker build -t "$${IMAGE_NAME}:$${DRONE_COMMIT_BRANCH}" -t "$${IMAGE_NAME}:$${CI_COMMIT_SHA}" .
+    - docker save --output "$${IMAGE_NAME}_$${DRONE_COMMIT_BRANCH}_$${DRONE_BUILD_CREATED}_$${CI_COMMIT_SHA}.tar" "$${IMAGE_NAME}"
+    - docker rmi "$${IMAGE_NAME}:$${DRONE_COMMIT_BRANCH}" "$${IMAGE_NAME}:$${CI_COMMIT_SHA}"
+
+  move_image:
+    image: node:10-alpine
+    commands:
+    - mkdir -p container/$(date +%Y-%m-%d)
+    - mv *.tar container/$(date +%Y-%m-%d)/
+    - find container
+  push_s3:
+    image: plugins/s3
+    secrets:
+    - aws_access_key_id
+    - aws_secret_access_key
+    environment:
+    - PLUGIN_BUCKET=zadarastorage-eric
+    - PLUGIN_SOURCE=container/*/*
+    - PLUGIN_TARGET=/container/
+    - PLUGIN_STRIP_PREFIX=container/
+    - PLUGIN_DRY_RUN=true
+
+  secondphase:
+    image: alpine:3.8
+    commands:
+    - echo 'Hello world'
+    - pwd
+    - cat currentTime
+    - find .
+    - echo ">.<"
