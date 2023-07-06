@@ -1,0 +1,26 @@
+depends_on:
+  - pipeline
+  - pipeline2
+
+steps:
+  firstphase:
+    image: alpine:3.8
+    commands:
+      - date -u -Iseconds
+      - echo 'Hello world'
+      - pwd
+      - date > currentTime
+      - find .
+      - printenv
+      - date -u -Iseconds
+
+  secondphase:
+    image: alpine:3.8
+    commands:
+      - date -u -Iseconds
+      - echo 'Hello world'
+      - pwd
+      - cat currentTime
+      - find .
+      - echo ">.<"
+      - date -u -Iseconds
