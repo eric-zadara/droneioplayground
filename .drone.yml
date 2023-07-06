@@ -3,40 +3,24 @@ kind: pipeline
 name: default
 
 steps:
-- name: firstphase
-  image: alpine:3.8
-  commands:
-  - echo 'Hello world'
-  - pwd
-  - date > currentTime
-  - find .
-  - printenv
+  - name: firstphase
+    image: alpine:3.8
+    commands:
+      - date -u -Iseconds
+      - echo 'Hello world'
+      - pwd
+      - date > currentTime
+      - find .
+      - printenv
+      - date -u -Iseconds
 
-- name: testnotify
-  image: zadara/ssh:alpine
-  commands:
-  - "export MSG=$(jq -c --raw-output -n '{text:\"`{{repo.name}}/{{build.branch}}` - Build #*<{{build.link}}|{{build.number}}>*/<${DRONE_COMMIT_LINK}|${DRONE_COMMIT_SHA:0:7}> - {{#success build.status}}successful{{else}}failed{{/success}}. `$(date +%Y-%m-%d).${CI_COMMIT_SHA}`\"}')"
-  - "curl -X POST -H \"Content-type: application/json\" --data \"${MSG}\" \"${SLACK_WEBHOOK}\""
-  environment:
-    SLACK_CHANNEL:
-      from_secret: slack_channel
-    SLACK_WEBHOOK:
-      from_secret: slack_webhook
-  when:
-    status:
-    - success
-    - failure
-
-- name: notify
-  image: plugins/slack
-  settings:
-    channel:
-      from_secret: slack_channel
-    webhook:
-      from_secret: slack_webhook
-    template: "`{{repo.name}}/{{build.branch}}` - Build #*<{{build.link}}|{{build.number}}>*/<${DRONE_COMMIT_LINK}|${DRONE_COMMIT_SHA:0:7}> - {{#success build.status}}successful{{else}}failed{{/success}}. `$(date +%Y-%m-%d).${CI_COMMIT_SHA}`"
-
-volumes:
-- name: dockersock
-  host:
-    path: /var/run/docker.sock
+  - name: secondphase
+    image: alpine:3.8
+    commands:
+      - date -u -Iseconds
+      - echo 'Hello world'
+      - pwd
+      - cat currentTime
+      - find .
+      - echo ">.<"
+      - date -u -Iseconds
