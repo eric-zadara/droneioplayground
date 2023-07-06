@@ -1,5 +1,5 @@
 steps:
-  firstphase:
+  aphase:
     image: alpine:3.8
     commands:
       - date -u -Iseconds
@@ -10,7 +10,7 @@ steps:
       - printenv
       - date -u -Iseconds
 
-  secondphase:
+  bphase:
     image: alpine:3.8
     commands:
       - date -u -Iseconds
